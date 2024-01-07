@@ -40,7 +40,7 @@ static float u_VN(float x) {
 }
 
 static float u_E(float x) {
-	return x > 85 ? 0 : (100 - x) / 100;
+	return x > 85 ? 1 : x / 100;
 }
 
 static float u_EM(float x) {
