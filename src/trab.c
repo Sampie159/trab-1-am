@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 
 typedef struct {
@@ -90,8 +91,6 @@ static Decisao fazer_escolha(Conjuntos *c) {
 
 	float fazer = c->esforco.baixo * .15 + c->estado_mental.bom * .25 + c->nota_necessaria.muito * .25 + c->valor_nota.alta * .35;
 	
-	printf("Fazer: %f\n", fazer);
-	
 	if (fazer == 1)	return Certeza;
 	else if (fazer > .75) return Precisa;
 	else if (fazer > .50) return BomFazer;
@@ -100,6 +99,57 @@ static Decisao fazer_escolha(Conjuntos *c) {
 }
 
 int main(void) {
+	// Bloquinho de testes
+	{
+		Conjuntos c = { 0 };
+		float e[4] = { 100, 0, 0, 0 }; // Valor Nota muito alto
+
+		preencher_conjuntos(&c, e);
+		assert(fazer_escolha(&c) == Certeza); // Sempre tem que fazer
+
+		Conjuntos c2 = { 0 };
+		float e2[4] = { 0, 0, 0, 0 }; // Valor Nota muito baixo
+
+		preencher_conjuntos(&c2, e2);
+		assert(fazer_escolha(&c2) == Descansa); // Nunca tem que fazer
+
+		Conjuntos c3 = { 0 };
+		float e3[4] = { 50, 40, 0, 100 }; // Estado mental péssimo
+
+		preencher_conjuntos(&c3, e3);
+		assert(fazer_escolha(&c3) == Descansa); // Nunca tem que fazer
+
+		Conjuntos c4 = { 0 };
+		float e4[4] = { 20, 60, 50, 100 }; // Nota Necessária muito alta
+
+		preencher_conjuntos(&c4, e4);
+		assert(fazer_escolha(&c4) == Certeza); // Sempre tem que fazer
+
+		Conjuntos c5 = { 0 };
+		float e5[4] = { 88, 72, 22, 12 }; // Valores aleatórios
+
+		preencher_conjuntos(&c5, e5);
+		assert(fazer_escolha(&c5) == NaoPrecisa);
+
+		Conjuntos c6 = { 0 };
+		float e6[4] = { 88, 33, 19, 63 }; // Valores aleatórios
+
+		preencher_conjuntos(&c6, e6);
+		assert(fazer_escolha(&c6) == BomFazer);
+
+		Conjuntos c7 = { 0 };
+		float e7[4] = { 67, 24, 81, 84 }; // Valores aleatórios
+
+		preencher_conjuntos(&c7, e7);
+		assert(fazer_escolha(&c7) == BomFazer);
+
+		Conjuntos c8 = { 0 };
+		float e8[4] = { 30, 60, 50, 50 }; // Valores aleatórios
+
+		preencher_conjuntos(&c8, e8);
+		assert(fazer_escolha(&c8) == NaoPrecisa);
+	}
+	
 	Conjuntos conjuntos = { 0 };
 	float vn, e, em, nn;
 
@@ -108,12 +158,10 @@ int main(void) {
 	printf("Diga, quanto que vale o trabalho para a sua média [0..100]? ");
 	scanf("%f", &vn);
 	fflush(stdin);
-	printf("%f\n", vn);
 	
 	printf("E quanto esforço será necessário para fazê-lo [0..100]? ");
 	scanf("%f", &e);
 	fflush(stdin);
-	printf("%f\n", e);
 
 	printf("Como está seu estado mental nesses últimos dias [-100..100]? ");
 	scanf("%f", &em);
@@ -122,14 +170,12 @@ int main(void) {
 		printf("Coringou\n");
 		printf("Cthulhu Fhtagn\n");
 	}
-	printf("%f\n", em);
 
 	printf("Você precisa de muita nota [0..100]? ");
 	scanf("%f", &nn);
 	fflush(stdin);
-	printf("%f\n", nn);
 
-	float entradas[] = { vn, e, em, nn };
+	float entradas[4] = { vn, e, em, nn };
 	preencher_conjuntos(&conjuntos, entradas);
 
 	printf("Amigo/a, baseado em tudo que você me disse, acho que você...\n");
