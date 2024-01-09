@@ -2,3 +2,5 @@
 .cache/clangd/index
 build
 src.o
+src/trab_linux
+src/trab_windows.exe

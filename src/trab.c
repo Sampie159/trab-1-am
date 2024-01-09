@@ -90,7 +90,7 @@ static Decisao fazer_escolha(Conjuntos *c) {
 	else if (c->nota_necessaria.muito == 1) return Certeza;
 
 	float fazer = c->esforco.baixo * .15 + c->estado_mental.bom * .25 + c->nota_necessaria.muito * .25 + c->valor_nota.alta * .35;
-	
+
 	if (fazer == 1)	return Certeza;
 	else if (fazer > .75) return Precisa;
 	else if (fazer > .50) return BomFazer;
